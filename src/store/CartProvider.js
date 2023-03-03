@@ -8,13 +8,54 @@ const defaultCartState = {
 
 const cartReducer = (state, action) => {
   switch (action.type) {
+    //adding to state to  show cart meanu
     case "ADD":
-      const updatedIteam = state.iteams.concat(action.iteam);
-      const updatedTotalAmount = state.totalAmount + (action.iteam.price * action.iteam.amount);
-      return { iteams: updatedIteam, totalAmount: updatedTotalAmount };
+      const updatedTotalAmount =
+        state.totalAmount + action.iteam.price * action.iteam.amount;
+
+      const existingCartIteamIndex = state.iteams.findIndex(
+        (iteam) => iteam.id === action.iteam.id
+      );
+      const existingCartIteamn = state.iteams[existingCartIteamIndex];
+
+      let updatedIteams;
+
+      if (existingCartIteamn) {
+        const updatedIteam = {
+          ...existingCartIteamn,
+          amount: existingCartIteamn.amount + action.iteam.amount,
+        };
+        updatedIteams = [...state.iteams];
+        updatedIteams[existingCartIteamIndex] = updatedIteam;
+      } else {
+        updatedIteams = state.iteams.concat(action.iteam);
+      }
+
+      return { iteams: updatedIteams, totalAmount: updatedTotalAmount };
       break;
+
+    // removinf logic from cart menu
     case "REMOVE":
-      // return {iteams:[],}
+      const existingCartIteamIndexr = state.iteams.findIndex(
+        (iteam) => iteam.id === action.id
+      );
+      const existingIteamr = state.iteams[existingCartIteamIndexr];
+      const updtaedAmount = state.totalAmount - existingIteamr.price;
+
+      let updatedIteamsr;
+
+      if (existingIteamr.amount === 1) {
+        updatedIteamsr = state.iteams.filter((iteam) => iteam.id != action.id);
+      } else {
+        const updatedIteamr = {
+          ...existingIteamr,
+          amount: existingIteamr.amount - 1,
+        };
+        updatedIteamsr = [...state.iteams];
+        updatedIteamsr[existingCartIteamIndexr] = updatedIteamr;
+      }
+      return {iteams:updatedIteamsr,totalAmount:updtaedAmount};
+
       break;
 
     default:
