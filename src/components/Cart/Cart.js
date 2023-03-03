@@ -35,9 +35,7 @@ const Cart = (props) => {
       ))}
     </ul>
   );
-
   
-
   return (
     <Modal onClose={props.onhiddenCart}>
       {cartIteams}

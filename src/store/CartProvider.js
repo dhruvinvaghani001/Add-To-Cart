@@ -1,11 +1,15 @@
 import CartContext from "./cart-context";
 import { useReducer } from "react";
 
+
+//default state of cart
 const defaultCartState = {
   iteams: [],
   totalAmount: 0,
 };
 
+
+//reducer function for useReducer
 const cartReducer = (state, action) => {
   switch (action.type) {
     //adding to state to  show cart meanu
@@ -34,28 +38,36 @@ const cartReducer = (state, action) => {
       return { iteams: updatedIteams, totalAmount: updatedTotalAmount };
       break;
 
-    // removinf logic from cart menu
+    // removing logic from cart menu
     case "REMOVE":
+
+      //to get  index of existing iteam
       const existingCartIteamIndexr = state.iteams.findIndex(
         (iteam) => iteam.id === action.id
       );
+
+      //existing food  
       const existingIteamr = state.iteams[existingCartIteamIndexr];
+      //amount should be reduce after removing from cart
       const updtaedAmount = state.totalAmount - existingIteamr.price;
 
       let updatedIteamsr;
-
+      
+      //if existing iteam count is one then we have to remove from cart
       if (existingIteamr.amount === 1) {
         updatedIteamsr = state.iteams.filter((iteam) => iteam.id !== action.id);
       } else {
+        //we have to reduce amount of existing product 
         const updatedIteamr = {
           ...existingIteamr,
           amount: existingIteamr.amount - 1,
         };
         updatedIteamsr = [...state.iteams];
+        //we have to update existing food and also have tyo push again in updated iteams
         updatedIteamsr[existingCartIteamIndexr] = updatedIteamr;
       }
-      return {iteams:updatedIteamsr,totalAmount:updtaedAmount};
-
+      //returning state for updated iteam list and total amount
+      return { iteams: updatedIteamsr, totalAmount: updtaedAmount };
       break;
 
     default:
@@ -64,6 +76,8 @@ const cartReducer = (state, action) => {
 };
 
 const CartProvider = (props) => {
+
+  // here useReducerused to manage state of cart list
   const [cartState, dispatchCartAction] = useReducer(
     cartReducer,
     defaultCartState
@@ -76,6 +90,7 @@ const CartProvider = (props) => {
     dispatchCartAction({ type: "REMOVE", id: id });
   };
 
+  //cart context which is passed thorught CartContext Provider
   const cartContext = {
     iteams: cartState.iteams,
     totalAmount: cartState.totalAmount,
