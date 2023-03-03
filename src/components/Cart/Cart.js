@@ -4,13 +4,14 @@ import classes from "./Cart.module.css";
 import CartContext from "../../store/cart-context";
 import CartItem from "./CartItem";
 
-const cartIteams = [{ id: "1", name: "sushui", amount: 3, price: "12.99" }].map(
-  (iteam) => <li>{iteam.name}</li>
-);
+
 
 const Cart = (props) => {
+  
   const cartCtx = useContext(CartContext);
+  
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
+  
   const hasIteam = cartCtx.iteams.length > 0;
 
   const removeHandler = (id) => {
@@ -39,11 +40,11 @@ const Cart = (props) => {
   return (
     <Modal onClose={props.onhiddenCart}>
       {cartIteams}
+      {!hasIteam && <div><h2>No Product Added to Cart</h2></div>}
       <div className={classes.total}>
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-
       <div className={classes.actions}>
         <button onClick={props.onhiddenCart} className={classes["button--alt"]}>
           Close
